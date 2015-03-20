@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 import hashlib
+from lxml.etree import fromstring
+
 
 # Create your views here.
 
@@ -27,7 +30,6 @@ def checkSignture(request):
 	else:
 		return HttpResponse("not match")
 
-
 def receiveMsg(request):
 	'''
 	receive message from wechat server
@@ -40,8 +42,9 @@ def receiveMsg(request):
 
 	replyMsg = dict(zip(tag_list,text_list))
 
-	response = JsonResponse(replyMsg)
-
+	response = HttpResponse(str(replyMsg))
+	return response
+@csrf_exempt
 def main(request):
 
 	if request.method == 'GET':
