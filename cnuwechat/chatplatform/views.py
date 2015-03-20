@@ -22,7 +22,7 @@ def checkSignture(request):
 
 	result = hashlib.sha1(result_str).hexdigest()
 
-	if result == signature:
+	if signature and result == signature:
 		return HttpResponse(echostr)
 	else:
 		return HttpResponse("not match")
