@@ -58,3 +58,9 @@ target/
 
 #Uwsgi 
 *.ini
+
+#sql
+*.sqlite3
+
+#xml
+*.xml
