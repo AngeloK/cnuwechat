@@ -56,7 +56,7 @@ def receiveMsg(request):
 	msg = WechatMsg()
 
 	# content = contentResponse()
-	content = 'hello!'
+	content = '<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx04feb7b61454d11a&redirect_uri=http://123.57.216.14/oauth2/auth&response_type=code&scope=snsapi_userinfo&state=1#wechat_redirect">点击这里绑定</a>'
 
 	transText = msg.build_text_msg(data,content)
 
