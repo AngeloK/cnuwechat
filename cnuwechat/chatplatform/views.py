@@ -5,6 +5,7 @@ from django.http import HttpResponse,JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import hashlib
 from lxml.etree import fromstring
+from WechatMessage import WechatMsg
 
 
 # Create your views here.
@@ -30,23 +31,40 @@ def checkSignture(request):
 	else:
 		return HttpResponse("not match")
 
-def receiveMsg(request):
-	'''
-	receive message from wechat server
-	'''
+def parseToJson(raw_data):
 
-	data = fromstring(request.body)
+	'''
+	Parse xml receive from Wechat server to json message 
+	'''
+	data = fromstring(raw_data)
 
 	tag_list = [item.tag for item in data]
 	text_list = [item.text for item in data]
 
-	replyMsg = dict(zip(tag_list,text_list))
+	result = dict(zip(tag_list,text_list))
 
-	response = HttpResponse(str(replyMsg))
-	return response
+	return result
+
+def receiveMsg(request):
+	'''
+	receive message from wechat server
+	'''	
+	msg_from_wechat = request.body
+
+	data = parseToJson(msg_from_wechat)
+
+	msg = WechatMsg()
+
+	# content = contentResponse()
+	content = 'hello!'
+
+	transText = msg.build_text_msg(data,content)
+
+	return HttpResponse(transText)
+
+
 @csrf_exempt
 def main(request):
-
 	if request.method == 'GET':
 		return checkSignture(request)
 	elif request.method == 'POST':
