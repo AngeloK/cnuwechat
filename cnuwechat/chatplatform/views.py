@@ -82,8 +82,11 @@ def authenticate(username,password):
 
 @csrf_exempt
 def login(request):
-        if request.session['studentid']:
-            return HttpResponse(u"你已经成功绑定")
+        try:
+            if request.session['studentid']:
+                return HttpResponse(u"你已经成功绑定")
+        except:
+            pass
         if request.method == 'POST':
             print request.body
             username = request.POST['studentid']
