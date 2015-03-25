@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+
 from django.shortcuts import render
 from django.http import HttpResponse,JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -56,7 +57,7 @@ def receiveMsg(request):
 	msg = WechatMsg()
 
 	# content = contentResponse()
-	content = '<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx04feb7b61454d11a&redirect_uri=http://123.57.216.14/oauth2/auth&response_type=code&scope=snsapi_userinfo&state=1#wechat_redirect">点击这里绑定</a>'
+	content = "hello"
 
 	transText = msg.build_text_msg(data,content)
 
@@ -71,3 +72,7 @@ def main(request):
 		return receiveMsg(request)
 	else:
 		return Http404
+
+
+def login(request):
+        pass 
