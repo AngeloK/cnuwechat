@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 import hashlib
 from lxml.etree import fromstring
 from WechatMessage import WechatMsg
-
+from .models import Student
 
 # Create your views here.
 
@@ -73,6 +73,37 @@ def main(request):
 	else:
 		return Http404
 
+def authenticate(username,password):
+        user = Student.objects.get(stuID = username)
+        if user.password == password:
+            return True
+        else:
+            return False
 
+@csrf_exempt
 def login(request):
-        pass 
+        if request.session['studentid']:
+            return HttpResponse(u"你已经成功绑定")
+        if request.method == 'POST':
+            print request.body
+            username = request.POST['studentid']
+            password = request.POST['password']
+
+            if authenticate(username,password):
+                request.session['studentid'] = username            
+                return HttpResponse(u'登陆成功')
+            else:
+                return HttpResponse(u'登录失败，请重试')
+        else:
+            return render(request,'login_form.html')
+def search_balance(request):
+        try:
+            current_id = request.session['studentid']
+            current_user = Student.objects.get(stuID = current_id)
+            return HttpResponse("Balance:%s" %current_user.card_balance)
+        except:
+            return HttpResponse(u"请先绑定")
+
+def logout(request):
+        request.session['studentid'] = None
+        return HttpResponse(u"解绑成功")
