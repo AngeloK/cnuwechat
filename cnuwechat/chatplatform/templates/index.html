@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+        {% load staticfiles %}
+    </head>        
+    <body>
+        <nav class="navbar navbar-inverse navbar-fixed">
+            <span class="navbar-brand">信息门户</span>
+        </nav>
+        <div class="container" >
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-info" role="alert">{{ message }}</div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-info" role="alert">欢迎来到首师大信息门户</div>
+            {% endif %}
+            {% block content %}{% endblock %}
+        </div>
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    </body>
+</html>

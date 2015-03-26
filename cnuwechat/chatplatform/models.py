@@ -47,6 +47,8 @@ class Student(models.Model):
 	def __unicode__(self):
 		return "StudentID:%s,Name:%s" %(self.stuID,self.name)
 
+                
+
 class Teacher(models.Model):
 
 	#Basic information for a teacher

@@ -64,3 +64,7 @@ target/
 
 #xml
 *.xml
+#setting data & some scripts
+setting.py
+adddata.py
+create_token_table.py
