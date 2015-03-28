@@ -101,7 +101,7 @@ class Schedule(models.Model):
 		verbose_name_plural = "Schedules"
 
 	def __unicode__(self):
-		return "StudentID:%s, CourseID:%s on %s" %(self.StudentID,self.courseID, \
+		return "StudentID:%s, CourseID:%s on %s" %(self.studentID,self.courseID, \
 																self.week)
 	
 

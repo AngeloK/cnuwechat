@@ -1,0 +1,15 @@
+{% extends 'index.html' %}
+{% block content %}
+    <div class="panel panel-default">
+        <div class="panel-heading">基本信息</div>
+        <div class="panel-body">
+            <p>学号:{{ current_user.stuID }}</p> 
+            <p>姓名:{{ current_user.name}}</p>
+            <p>院系:{{ department.departmentName }}</p>
+            <p>流量余额:{{ current_user.flow_balance|floatformat }}&nbsp;Mb</p>
+            <p>校园卡余额:{{ current_user.card_balance|floatformat }}&nbsp;元 </p> 
+            <p>查询时间:{% now 'Y.m.d' %}
+        </div>
+    </div>
+
+{% endblock content %}

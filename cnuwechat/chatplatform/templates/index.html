@@ -10,13 +10,11 @@
         <nav class="navbar navbar-inverse navbar-fixed">
             <span class="navbar-brand">信息门户</span>
         </nav>
-        <div class="container" >
+        <div class="container" style="margin-top:70px;" >
             {% if messages %}
                 {% for message in messages %}
                     <div class="alert alert-info" role="alert">{{ message }}</div>
                 {% endfor %}
-            {% else %}
-                <div class="alert alert-info" role="alert">欢迎来到首师大信息门户</div>
             {% endif %}
             {% block content %}{% endblock %}
         </div>

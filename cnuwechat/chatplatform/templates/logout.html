@@ -1,5 +1,5 @@
-{% extends 'login.html' %}
+{% extends 'index.html' %}
 
 {% block content %}
-    <div class="alert alert-info" role="alert">你已经绑定，请返回或<a href="{{ url 'logout'}}">解除绑定</a> </div>
+    <div class="alert alert-info" role="alert">你已经绑定，请返回或<a href="{% url 'logout' %}">解除绑定</a> </div>
 {% endblock content %}
