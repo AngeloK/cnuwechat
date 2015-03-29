@@ -7,6 +7,7 @@ import hashlib
 from receiver import WechatMsg
 from .models.eduModels import Student
 from .models.eduModels import Schedule
+from .models.response import Responser
 from .forms import LoginForm
 import datetime
 from spider import ArticleSpider
@@ -41,19 +42,24 @@ def receiveMsg(request):
     msg = WechatMsg()
     msg_from_wechat = request.body
 
-    data = msg.parseToJson(msg_from_wechat)
+    j_data = msg.parseToJson(msg_from_wechat)
 
-    # content = contentResponse(data)
-    # return HttpResponse(content)
-
+    respon = Responser()
+    result = respon.identify_data(j_data)
+    
     #content = u"这是一个测试"
     #transText = msg.build_text_msg(data,content)
-    spider = ArticleSpider()
-    content = spider.get_school_news()
-    transText = msg.build_picText_msg(data,content)
+    #spider = ArticleSpider()
+    #content = spider.get_school_news()
+
+    #transText = msg.build_picText_msg(j_data,content)
+    if result[1] == True:
+        transText = msg.build_picText_msg(j_data,result[0])
+    else:
+        transText = msg.build_text_msg(j_data,result[0])
     return HttpResponse(transText)
 
-
+    
 @csrf_exempt
 def main(request):
     if request.method == 'GET':

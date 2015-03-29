@@ -59,7 +59,7 @@ class WechatMsg(object):
         #content.text = CDATA(call_back_content)
         content.text = call_back_content
 
-        str_xml = tostring(msg)
+        str_xml = tostring(msg,encoding='utf-8')
 
         return str_xml
 
@@ -106,7 +106,7 @@ class WechatMsg(object):
             url = etree.SubElement(item,'Url')
             url.text = CDATA(data['item'+str(arti_count)]['url'])
 
-        str_xml = tostring(msg)
+        str_xml = tostring(msg,encoding='utf-8')
         return str_xml
 
     #def build_text_data(ins_code,departmentId=None):
