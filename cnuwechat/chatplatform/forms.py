@@ -1,7 +1,7 @@
 #-*- coding=utf-8 -*-
 
 from django import forms
-from .models import Student
+from .models.eduModels import Student
 #from django.forms.widgets import TextInput,PasswordInput
 
 class LoginForm(forms.Form):

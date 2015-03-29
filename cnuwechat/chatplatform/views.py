@@ -4,10 +4,9 @@ from django.http import HttpResponse,JsonResponse
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 import hashlib
-from lxml.etree import fromstring
-from WechatMessage import WechatMsg
-from .models import Student
-from .models import Schedule
+from receiver import WechatMsg
+from .models.eduModels import Student
+from .models.eduModels import Schedule
 from .forms import LoginForm
 import datetime
 # Create your views here.
@@ -33,36 +32,27 @@ def checkSignture(request):
     else:
             return HttpResponse("not match")
 
-def parseToJson(raw_data):
-
-    '''
-    Parse xml receive from Wechat server to json message 
-    '''
-    data = fromstring(raw_data)
-
-    tag_list = [item.tag for item in data]
-    text_list = [item.text for item in data]
-
-    result = dict(zip(tag_list,text_list))
-
-    return result
 
 def receiveMsg(request):
     '''
     receive message from wechat server
     '''	
+    msg = WechatMsg()
     msg_from_wechat = request.body
 
-    data = parseToJson(msg_from_wechat)
+    data = msg.parseToJson(msg_from_wechat)
 
-    msg = WechatMsg()
+    # content = contentResponse(data)
+    # return HttpResponse(content)
 
-    # content = contentResponse()
-    content = "hello"
-
-    transText = msg.build_text_msg(data,content)
-
-    return HttpResponse(transText)
+    #content = "hello"
+    picurl = 'http://365jia.cn/uploads/13/0301/5130c2ff93618.jpg'
+    url = 'http://www.baidu.com'
+    content1 = {'1':{'title':u'你好','description':u'文章描述','picurl':picurl,'url':url},'2':{'title':u'你好','description':u'文章描述','picurl':picurl,'url':url}}
+    #transText = msg.build_text_msg(data,content)
+    pic_transText = msg.build_picText_msg(data,content1)
+    print pic_transText
+    return HttpResponse(pic_transText)
 
 
 @csrf_exempt
@@ -136,7 +126,7 @@ def schedule(request):
 
         return render(request,'today_schedule.html',{'schedules':current_schedule})
     except:
-        #return HttpResponse(u"请先绑定")
+        return HttpResponse(u"请先绑定")
         pass
     return render(request,'today_schedule.html')
 
@@ -147,3 +137,6 @@ def logout(request):
         pass
     messages.info(request,u'解绑成功，请返回')
     return redirect('index')
+
+def school_news(request):
+    pass
