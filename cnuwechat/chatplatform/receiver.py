@@ -1,10 +1,10 @@
-# -*- coding: utf-8 -*-
+# -*- coding:utf-8 -*-
 import time
 from lxml import etree
 from lxml.etree import CDATA
 from lxml.etree import tostring
 from lxml.etree import fromstring
-
+from spider import ArticleSpider 
 
 class WechatMsg(object):
 
@@ -56,7 +56,8 @@ class WechatMsg(object):
         msgType.text = CDATA('text')
 
         content = etree.SubElement(msg,'Content')
-        content.text = CDATA(call_back_content)
+        #content.text = CDATA(call_back_content)
+        content.text = call_back_content
 
         str_xml = tostring(msg)
 
@@ -93,17 +94,34 @@ class WechatMsg(object):
             item = etree.SubElement(articles,'item')
 
             title = etree.SubElement(item,'Title')
-            title.text = CDATA(data[str(arti_count)]['title'])
+            #title.text = CDATA(data['item'+str(arti_count)]['title'])
+            title.text = data['item'+str(arti_count)]['title']
 
             description = etree.SubElement(item,'Description')
-            description.text = CDATA(data[str(arti_count)]['description'])
+            description.text = CDATA(data['item'+str(arti_count)]['description'])
 
             picurl = etree.SubElement(item,'PicUrl')
-            picurl.text = CDATA(data[str(arti_count)]['picurl'])
+            picurl.text = CDATA(data['item'+str(arti_count)]['picurl'])
 
             url = etree.SubElement(item,'Url')
-            url.text = CDATA(data[str(arti_count)]['url'])
+            url.text = CDATA(data['item'+str(arti_count)]['url'])
 
         str_xml = tostring(msg)
         return str_xml
+
+    #def build_text_data(ins_code,departmentId=None):
+
+        #spider = ArticleSpider()
+        
+        #if ins_code == '1':
+            #data = spider.get_school_news()
+        #elif ins_code == '2':
+            #data = spider.get_department_news(departmentId)
+        #else:
+            #data = WechatMsg.normal_response()
+            #return data
+        
+        #return data
+
+
 

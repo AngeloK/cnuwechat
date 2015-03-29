@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding:utf-8 -*-
 from django.shortcuts import render,redirect
 from django.http import HttpResponse,JsonResponse
 from django.contrib import messages
@@ -9,6 +9,7 @@ from .models.eduModels import Student
 from .models.eduModels import Schedule
 from .forms import LoginForm
 import datetime
+from spider import ArticleSpider
 # Create your views here.
 
 def checkSignture(request):
@@ -45,14 +46,12 @@ def receiveMsg(request):
     # content = contentResponse(data)
     # return HttpResponse(content)
 
-    #content = "hello"
-    picurl = 'http://365jia.cn/uploads/13/0301/5130c2ff93618.jpg'
-    url = 'http://www.baidu.com'
-    content1 = {'1':{'title':u'你好','description':u'文章描述','picurl':picurl,'url':url},'2':{'title':u'你好','description':u'文章描述','picurl':picurl,'url':url}}
+    #content = u"这是一个测试"
     #transText = msg.build_text_msg(data,content)
-    pic_transText = msg.build_picText_msg(data,content1)
-    print pic_transText
-    return HttpResponse(pic_transText)
+    spider = ArticleSpider()
+    content = spider.get_school_news()
+    transText = msg.build_picText_msg(data,content)
+    return HttpResponse(transText)
 
 
 @csrf_exempt
