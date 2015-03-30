@@ -25,7 +25,7 @@ class Responser(object):
         #return ins_code
 
         
-    def identify_data(self,d):
+    def identify_data(self,d,request=None):
 
         is_pic_text_msg = True
 
@@ -39,6 +39,9 @@ class Responser(object):
                     content = spider.get_school_news()
                 elif d['EventKey'] == 'DEPARTMENT_NEWS':
                     content = spider.get_math_news()
+                elif d['EventKey'] == 'BALANCE_KEY':
+                    is_pic_text_msg = False
+                    content = spider.get_balance(request) 
                 else:
                     pass
             else:

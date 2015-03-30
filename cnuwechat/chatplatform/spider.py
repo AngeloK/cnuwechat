@@ -1,7 +1,9 @@
 # CnuSpider.py
 # coding=utf-8
-import requests
+import requests as req
 from django.core.cache import cache
+from django.contrib import messages
+from django.shortcuts import redirect
 import urllib2
 from bs4 import BeautifulSoup
 
@@ -12,10 +14,60 @@ class ArticleSpider(object):
 
         #self.title = []
         #self.description = []
+    
+    def get_balance(self,request):
+        
+        try:
+            current_id = request.session['studentid']
+            current_user = cache.get(current_id)
+            
+            if current_user:
+                try:
+                    balance = current_user['balance']
+                    return balance
+                except:
+                    pass
 
-    
-    
-    
+            index_url = 'http://uid.cnu.edu.cn/index.portal'
+            
+            cookie = current_user['user_auth']
+
+            res = req.get(index_url,cookies=cookie)
+
+            soup = BeautifulSoup(res.text)
+
+     
+            flow_head = u'校园网服务\n'
+            card_head = u'\n校园卡余额:'
+
+            flow_balance = soup.find_all('div',class_='showdesc')
+
+            for item in flow_balance[0].stripped_strings:
+                flow_head = flow_head+' '+item
+
+
+            card_block = soup.find_all('div',id='pf46')
+            
+            card_portletContent = card_block[0].find_all('div',class_='portletContent')[0]
+            
+            card_balance_div = card_portletContent.find('div')
+
+            card_balance = card_balance_div.find('span').string
+            
+            card_head = card_head +card_balance + u'元'
+
+            balance_result = flow_head + card_head
+
+            current_user['balance'] = balance_result
+
+            cache.set(current_id,current_user,timeout=600)
+
+            return balance_result
+        except:
+            content = u'请先绑定'
+            return content
+
+
     def get_school_news(self):
 
         school_news = cache.get('school_news')
@@ -106,7 +158,7 @@ class ArticleSpider(object):
 
 
         
-    
+     
 
 
 
