@@ -66,8 +66,8 @@ target/
 #xml
 *.xml
 
-#svp file
-*.svp
+#swp file
+*.swp
 
 
 #setting data & some scripts
