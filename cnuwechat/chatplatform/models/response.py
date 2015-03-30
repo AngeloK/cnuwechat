@@ -25,31 +25,33 @@ class Responser(object):
         #return ins_code
 
         
-    def identify_data(self,d,request=None):
+    def identify_data(self,d):
 
-        is_pic_text_msg = True
+        msgType = ''
 
         if d['MsgType']=='event':
             if d['Event'] == 'subscribe':
                 content = u'欢迎关注首都师范大学微信公众平台教务信息自助查询系统，你的支持是我们最大的动力！'
-                is_pic_text_msg = False
+                msgType = 'subcribe'
             elif d['Event'] == 'CLICK':
                 spider = ArticleSpider()
                 if d['EventKey'] == 'SCHOOL_NEWS':
+                    msgType = 'news'
                     content = spider.get_school_news()
                 elif d['EventKey'] == 'DEPARTMENT_NEWS':
                     content = spider.get_math_news()
+                    msgType = 'news'
                 elif d['EventKey'] == 'BALANCE_KEY':
-                    is_pic_text_msg = False
-                    content = spider.get_balance(request) 
+                    msgType = 'balance'
+                    content = None         #this type of content shoud authenticate first
                 else:
                     pass
             else:
                 pass
         else:
+            msgType = 'text'
             content = u'我正在锻炼自己有更好的交流功能，现在还很害羞^_^'
-            is_pic_text_msg = False
-        return content,is_pic_text_msg
+        return content,msgType
         
     #def identify_data(self):
 

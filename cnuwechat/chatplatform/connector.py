@@ -39,8 +39,8 @@ class CnuConnector(object):
         login_response = requests.post(login_url,data,cookies=index_cookie)
         if login_response.status_code == 200:
             self._iplanetdirectorypro = login_response.cookies['iPlanetDirectoryPro']
-            user_auth = dict(JSESSIONID=self._jsessionid,iPlanetDirectoryPro=self._iplanetdirectorypro)
-            cache.set(self._username,user_auth,timeout=600)
+            user_info = dict(JSESSIONID=self._jsessionid,iPlanetDirectoryPro=self._iplanetdirectorypro)
+            cache.set(self._username,user_info,timeout=600)
             self.status = 1
         else:
             self.status = -1
@@ -75,10 +75,13 @@ class CnuConnector(object):
 
     def get_balance(self):
 
-        balance = cache.get(self._username)
+        user_info = cache.get(self._username)
 
-        if balance:
-            return balance
+        if user_info:
+            try:
+                return user_info['balance']
+            except:
+                pass
         
         index_url = 'http://uid.cnu.edu.cn/index.portal'
 
@@ -90,7 +93,7 @@ class CnuConnector(object):
             soup = BeautifulSoup(res.text)
 
      
-            flow_head = u'校园网服务\n'
+            flow_head = u'校园网服务:\n'
             card_head = u'\n校园卡余额:'
 
             flow_balance = soup.find_all('div',class_='showdesc')
@@ -110,8 +113,10 @@ class CnuConnector(object):
             card_head = card_head +card_balance + u'元'
 
             balance_result = flow_head + card_head
+            
+            user_info['balance'] = balance_result
 
-            cache.set(self._username,balance_result,timeout=600)
+            cache.set(self._username,user_info,timeout=600)
            
             return balance_result
         

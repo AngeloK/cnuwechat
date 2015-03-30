@@ -47,16 +47,35 @@ def receiveMsg(request):
     j_data = msg.parseToJson(msg_from_wechat)
 
     respon = Responser()
-    result = respon.identify_data(j_data,request=request)
+    content,msgType = respon.identify_data(j_data)
     
     #spider = ArticleSpider()
     #content = spider.get_school_news()
 
     #transText = msg.build_picText_msg(j_data,content)
-    if result[1] == True:
-        transText = msg.build_picText_msg(j_data,result[0])
+    #if result[1] == True:
+        #transText = msg.build_picText_msg(j_data,result[0])
+    #else:
+        #transText = msg.build_text_msg(j_data,result[0])
+
+    #c = CnuConnector('1110500095','197958')
+    #c.authenticate()
+    #content =  c.get_balance()
+    #transText = msg.build_text_msg(j_data,content)
+    
+    if msgType == 'balance' or msgType == 'schedule':
+        try:
+            user_info = cache.get(request.session['studentid'])
+            content = user_info['balance']
+        except:
+            content = u'请先登陆'
+        finally:
+            transText = msg.build_text_msg(j_data,content)
+    elif msgType == 'news':
+        transText = msg.build_picText_msg(j_data,content)
     else:
-        transText = msg.build_text_msg(j_data,result[0])
+        transText = msg.build_text_msg(j_data,content)
+
     return HttpResponse(transText)
 
     
@@ -75,45 +94,6 @@ def main(request):
 def index(request):
     return render(request,'index.html')
 
-def authenticate(username,password):
-    '''
-    authenticate username & password with them save in database
-    '''
-    user = Student.objects.get(stuID = username)
-    if user.password == password:
-        return True
-    else:
-        return False
-
-#@csrf_exempt
-#def login(request):
-    #'''
-    #After getting "post" requset,server authenticate username and password retrieved
-    #if user login successfully, a sessionID save, if this user enter login/ page the 
-    #second time, he will autumatically enter index/ page.
-    #'''
-    #if request.method == 'POST':
-        #try: 
-            #username = request.POST['studentid'] 
-            #password = request.POST['password'] 
-            #if authenticate(username,password):
-                #request.session['studentid'] = username
-                #messages.success(request,u'登陆成功，请返回')
-                #return redirect('index')
-            #else:
-                #pass
-        #except:
-            #messages.error(request,u'请输入正确的用户名和密码')
-            #return redirect('login')
-
-    #else:
-        #try:
-            #current_id = request.session['studentid']
-            #return render(request,'logout.html')
-        #except:
-            #form = LoginForm()
-            #return render(request,'login.html',{'form':form})
-
 
 @csrf_exempt
 def login(request):
@@ -128,8 +108,11 @@ def login(request):
             current_user.authenticate()
 
             if current_user.status == 1:
-                print cache.get(username)
                 request.session['studentid'] = username
+                user_info = cache.get(username)
+                balance = current_user.get_balance()
+                user_info['balance'] = balance
+                cache.set(username,user_info,timeout=600)
                 messages.success(request,u'绑定成功，请返回')
                 return redirect('index')
                 
