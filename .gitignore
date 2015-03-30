@@ -65,6 +65,11 @@ target/
 
 #xml
 *.xml
+
+#svp file
+*.svp
+
+
 #setting data & some scripts
 setting.py
 adddata.py
