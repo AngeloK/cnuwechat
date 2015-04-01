@@ -40,36 +40,45 @@ class Responser(object):
         
     def identify_data(self,d):
 
-        msgType = ''
+        msgType = 'text'                        #Default message type is text
 
         if d['MsgType']=='event':
             if d['Event'] == 'subscribe':
                 content = u'欢迎关注首都师范大学微信公众平台教务信息自助查询系统，你的支持是我们最大的动力！'
-                msgType = 'subcribe'
             elif d['Event'] == 'CLICK':
                 spider = ArticleSpider()
                 if d['EventKey'] == 'SCHOOL_NEWS':
-                    msgType = 'news'
+                    msgType = 'pic_text'
                     content = spider.get_school_news()
                 elif d['EventKey'] == 'DEPARTMENT_NEWS':
                     content = spider.get_math_news()
-                    msgType = 'news'
+                    msgType = 'pic_text'
                 elif d['EventKey'] == 'BALANCE_KEY':
-                    msgType = 'balance'
-                    content = None         #this type of content shoud authenticate first
-                else:
-                    pass
+                    openid = d['FromUserName']
+                    balance = cache.get(openid)
+                    if balance:
+                        content = balance
+                    else:
+                        content = u'请先绑定'
+                elif d['EventKey'] == 'BIND':
+                    openid = d['FromUserName']
+                    if cache.get(openid):
+                        content = push_login_link(openid,True)
+                    else:
+                        content = push_login_link(openid,False)
             else:
                 pass
         else:
-            msgType = 'text'
             content = u'我正在锻炼自己有更好的交流功能，现在还很害羞^_^'
         return content,msgType
-        
-    #def identify_data(self):
 
-        #spider = ArticleSpider()
-        #return spider.get_math_news()
+def push_login_link(openid,is_user_stored):
+    if is_user_stored:
+        link_html = u'<p>你已成功绑定</p>'
+    else:
+        url = 'http://127.0.0.1/login?openid=%s' %openid
+        link_html = u'<p>若要启动查询功能<a href="%s">请先绑定</a></p>' %url
+    return link_html
+
         
-                 
 

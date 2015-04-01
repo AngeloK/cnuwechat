@@ -1,6 +1,7 @@
 {% extends 'index.html' %}
 {% block content %}
 <form method="post" action="{% url 'login' %}">
+        <input type="hidden" name="openid" value={{ openid }}>
         <div class="form-group">
             <label for="studendid">学号</label>
             {{ form.studentid}}

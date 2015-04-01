@@ -49,32 +49,10 @@ def receiveMsg(request):
     respon = Responser()
     content,msgType = respon.identify_data(j_data)
     
-    #spider = ArticleSpider()
-    #content = spider.get_school_news()
-
-    #transText = msg.build_picText_msg(j_data,content)
-    #if result[1] == True:
-        #transText = msg.build_picText_msg(j_data,result[0])
-    #else:
-        #transText = msg.build_text_msg(j_data,result[0])
-
-    #c = CnuConnector('1110500095','197958')
-    #c.authenticate()
-    #content =  c.get_balance()
-    #transText = msg.build_text_msg(j_data,content)
-    
-    if msgType == 'balance' or msgType == 'schedule':
-        try:
-            user_info = cache.get(request.session['studentid'])
-            content = user_info['balance']
-        except:
-            content = u'请先登陆'
-        finally:
-            transText = msg.build_text_msg(j_data,content)
-    elif msgType == 'news':
-        transText = msg.build_picText_msg(j_data,content)
-    else:
+    if msgType == 'text':
         transText = msg.build_text_msg(j_data,content)
+    else:
+        transText = msg.build_picText_msg(j_data,content)
 
     return HttpResponse(transText)
 
@@ -90,7 +68,7 @@ def main(request):
     elif request.method == 'POST':
             return receiveMsg(request)
     else:
-            return Http404
+            return Http404('page not found')
 
 def index(request):
     return render(request,'index.html')
@@ -103,18 +81,14 @@ def login(request):
         try:
             username = request.POST['studentid']
             password = request.POST['password']
-
+            openid = request.POST['openid']
             current_user = CnuConnector(username,password)
 
             current_user.authenticate()
 
             if current_user.status == 1:
-                request.session['studentid'] = username
-                user_info = cache.get(username)
-                balance = current_user.get_balance()
-                user_info['balance'] = balance
-                cache.set(username,user_info,timeout=600)
                 messages.success(request,u'绑定成功，请返回')
+                #celery task, get balance()
                 return redirect('index')
                 
             else:
@@ -124,24 +98,22 @@ def login(request):
             messages.error(request,u'请输入用户名和密码')
             return redirect('login')
     else:
-        try:
-            current_id = request.session['studentid']
-            print cache.get(current_id)
-            return render(request,'logout.html')
-        except:
-            form = LoginForm()
-            return render(request,'login.html',{'form':form})
+        openid = request.GET['openid']
+        form = LoginForm()
+        return render(request,'login.html',{'form':form,'openid':openid})
 
 def search_balance(request):
-    try:
-        current_id = request.session['studentid']
-        current_user = Student.objects.get(stuID = current_id)
-        print cache.get(current_id)
-        return render(request,'search.html',{'current_user':current_user,'department':current_user.departmentID})
-    except:
-        messages.info(request,u'请先绑定')
-        return redirect('login')
+    #try:
+        #current_id = request.session['studentid']
+        #current_user = Student.objects.get(stuID = current_id)
+        #print cache.get(current_id)
+        #return render(request,'search.html',{'current_user':current_user,'department':current_user.departmentID})
+    #except:
+        #messages.info(request,u'请先绑定')
+        #return redirect('login')
+    pass
 
+    
 def schedule(request):
     try:
         current_id = request.session['studentid']
@@ -157,12 +129,13 @@ def schedule(request):
         return redirect('login')
 
 def logout(request):
-    try:
-        del request.session['studentid']
-        messages.info(request,u'解绑成功，请返回')
-    except KeyError:
-        pass
-    return redirect('index') 
+    pass
+    #try:
+        #del request.session['studentid']
+        #messages.info(request,u'解绑成功，请返回')
+    #except KeyError:
+        #pass
+    #return redirect('index') 
 
 def school_news(request):
     pass

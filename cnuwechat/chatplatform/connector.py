@@ -19,7 +19,7 @@ class CnuConnector(object):
         self.status = 0
     
     
-    def _create_cookie(self):
+    def create_cookie(self):
         cookie = dict(JSESSIONID=self._jsessionid,iPlanetDirectoryPro=self._iplanetdirectorypro)
         return cookie
         
@@ -63,55 +63,49 @@ class CnuConnector(object):
         
         
 
-    def get_balance(self):
+def get_balance_str(username,openid,cookie):
 
-        user_info = cache.get(self._username)
+    user_info = cache.get(openid)
 
-        if user_info:
-            try:
-                return user_info['balance']
-            except:
-                pass
+    if user_info:
+        try:
+            return user_info
+        except:
+            pass
+    
+    index_url = 'http://uid.cnu.edu.cn/index.portal'
+
+    res = requests.get(index_url,cookies=cookie)
+
+    soup = BeautifulSoup(res.text)
+
+    name_head = u'学号:'+username + '\n'
+
+    flow_head = u'校园网服务:\n'
+    card_head = u'\n\n校园卡余额:'
+
+    flow_balance = soup.find_all('div',class_='showdesc')
+
+    for item in flow_balance[0].stripped_strings:
+        flow_head = flow_head+' '+item
+
+
+    card_block = soup.find_all('div',id='pf46')
+    
+    card_portletContent = card_block[0].find_all('div',class_='portletContent')[0]
+    
+    card_balance_div = card_portletContent.find('div')
+
+    card_balance = card_balance_div.find('span').string
+    
+    card_head = card_head +card_balance + u'元'
+
+    balance_result = name_head + flow_head + card_head
         
-        index_url = 'http://uid.cnu.edu.cn/index.portal'
+    cache.set(openid,balance_result,timeout=1000)
+   
+    return balance_result
+    
 
-        if self.status == 1:
-            cookie = self._create_cookie()
-
-            res = requests.get(index_url,cookies=cookie)
-
-            soup = BeautifulSoup(res.text)
-
-     
-            flow_head = u'校园网服务:\n'
-            card_head = u'\n校园卡余额:'
-
-            flow_balance = soup.find_all('div',class_='showdesc')
-
-            for item in flow_balance[0].stripped_strings:
-                flow_head = flow_head+' '+item
-
-
-            card_block = soup.find_all('div',id='pf46')
-            
-            card_portletContent = card_block[0].find_all('div',class_='portletContent')[0]
-            
-            card_balance_div = card_portletContent.find('div')
-
-            card_balance = card_balance_div.find('span').string
-            
-            card_head = card_head +card_balance + u'元'
-
-            balance_result = flow_head + card_head
-            
-            user_info['balance'] = balance_result
-
-            cache.set(self._username,user_info,timeout=600)
-           
-            return balance_result
-        
-        else:
-            error_msg = u'请先绑定'
-            return error_msg
-
-        
+def get_balance_json(username,cookie):
+    pass
