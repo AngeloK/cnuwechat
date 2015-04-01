@@ -81,6 +81,7 @@ def receiveMsg(request):
     
 @csrf_exempt
 def main(request):
+    print cache.get('access_token')
     if request.method == 'GET':
             try:
                 return checkSignture(request)

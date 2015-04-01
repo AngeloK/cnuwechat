@@ -15,6 +15,18 @@ class ContentResponse(models.Model):
     def __unicode__(self):
         return self.ins_code
 
+class CnuUser(models.Model):
+
+    openid = models.CharField(max_length=100,unique=True)
+    studentid = models.CharField(max_length=100,unique=True)
+    jsessionid = models.CharField(max_length=100)
+    iplanetdirectorypro = models.CharField(max_length=200)
+
+    
+    def __unicode__(self):
+        return self.openid
+
+
 class Responser(object):
 
     

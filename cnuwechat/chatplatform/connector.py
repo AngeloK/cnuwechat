@@ -40,20 +40,10 @@ class CnuConnector(object):
         if login_response.status_code == 200:
             self._iplanetdirectorypro = login_response.cookies['iPlanetDirectoryPro']
             user_info = dict(JSESSIONID=self._jsessionid,iPlanetDirectoryPro=self._iplanetdirectorypro)
-            cache.set(self._username,user_info,timeout=600)
             self.status = 1
         else:
             self.status = -1
         
-    #def connect(self):
-        #index_url = 'http://uid.cnu.edu.cn/index.portal'
-        #if self.status:
-            #cookie = self._create_cookie()
-            #response = requests.get(index_url,cookies = cookie)
-        #else:
-            #error_msg = 'Error,username & password invalid or authenticat first'
-            #print error_msg
-            #return None
 
     def login_grade_system(self):
         grade_system_url = 'http://xk.cnu.edu.cn/zdtj.jsp'
