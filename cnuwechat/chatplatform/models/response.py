@@ -22,7 +22,8 @@ class CnuUser(models.Model):
     jsessionid = models.CharField(max_length=100)
     iplanetdirectorypro = models.CharField(max_length=200)
 
-    
+    class Meta:
+        app_label = 'chatplatform'
     def __unicode__(self):
         return self.openid
 
