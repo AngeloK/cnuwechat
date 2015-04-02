@@ -61,10 +61,9 @@ class Responser(object):
                         content = balance
                     else:
                         content = get_balance_str(openid)
-                        print content
                 elif d['EventKey'] == 'BIND':
                     openid = d['FromUserName']
-                    if cache.get(openid+'_balance'):
+                    if cache.get(openid+'_cookie'):
                         content = push_login_link(openid,True)
                     else:
                         content = push_login_link(openid,False)
@@ -76,7 +75,7 @@ class Responser(object):
 
 def push_login_link(openid,is_user_stored):
     if is_user_stored:
-        link_html = u'<p>你已成功绑定</p>'
+        link_html = u'你已成功绑定'
     else:
         url = 'http://123.57.216.14/login?openid=%s' %openid
         link_html = u'若要启动查询功能<a href="%s">请先绑定</a>' %url

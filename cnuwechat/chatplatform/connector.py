@@ -42,7 +42,7 @@ class CnuConnector(object):
             #user_info = dict(JSESSIONID=self._jsessionid,iPlanetDirectoryPro=self._iplanetdirectorypro)
             user_cookie = self.create_cookie()
             self.status = 1
-            cache.set(openid+'_cookie',user_cookie,timeout=600)
+            cache.set(openid+'_cookie',user_cookie,timeout=1000)
         else:
             self.status = -1
 
@@ -69,6 +69,9 @@ class CnuConnector(object):
 def get_balance_str(openid):
 
     user_cookie = cache.get(openid+'_cookie')
+    balance = cache.get(openid+'_balance')
+    if balance:
+        return balance
 
     if user_cookie:
         
@@ -81,12 +84,12 @@ def get_balance_str(openid):
         #name_head = u'学号:'+username + '\n'
 
         flow_head = u'校园网服务:\n'
-        card_head = u'\n\n校园卡余额:'
+        card_head = u'\n校园卡余额:'
 
         flow_balance = soup.find_all('div',class_='showdesc')
 
         for item in flow_balance[0].stripped_strings:
-            flow_head = flow_head+' '+item
+            flow_head = flow_head+' '+item + '\n'
 
 
         card_block = soup.find_all('div',id='pf46')
