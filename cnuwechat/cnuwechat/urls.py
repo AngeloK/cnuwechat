@@ -11,7 +11,6 @@ urlpatterns = patterns('',
     url(r'^$',views.main),
     url(r'^login/',views.login,name='login'),
     url(r'^index/',views.index,name='index'),
-    url(r'^balance/',views.search_balance,name='balance'),
     url(r'^logout/',views.logout,name='logout'),
     url(r'^schedule/',views.schedule,name='schedule'),
 )

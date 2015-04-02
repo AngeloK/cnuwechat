@@ -67,6 +67,8 @@ class Responser(object):
                         content = push_login_link(openid,True)
                     else:
                         content = push_login_link(openid,False)
+                elif f['EventKey'] == 'SCHEDULE':
+                    content = u'功能能正在完善中，敬请期待'
             else:
                 pass
         else:
