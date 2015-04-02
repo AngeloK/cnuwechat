@@ -152,9 +152,36 @@ class ArticleSpider(object):
     def get_biology_news():
         pass
 
-    def get_info_engineer_news():
+    def get_info_engineering_news(self):
+
+        info_engineering_news = cache.get('engineering_news')
+        if info_engineering_news:
+            return info_engineering_news
         index_url = 'http://www.ie.cnu.edu.cn/2011/index.php/Infodetail/shownotice'
-        pass
+        url_head = 'http://http://www.ie.cnu.edu.cn/2011/'
+        res = urllib2.urlopen(index_url).read()
+        soup = BeautifulSoup(res)
+        at_list =soup.find('ul',class_='newsize')
+
+        article_li = at_list.find_all('li',limit=5) 
+
+        data = {}
+        description = ''
+        picurl = 'http://ico.ooopic.com/ajax/iconpng/?id=115767.png'
+        item_index = 1
+        for item in article_li:
+            title = item.a.string[26:]
+            url = url_head + item.a['href']
+            article = dict(title=title,url=url,description=description,picurl=picurl)
+            data['item%d' %item_index] = article
+            item_index = item_index + 1
+
+        title = u'查看更多'
+        url = index_url
+        article = dict(title=title,url=url,description=description,picurl=picurl)
+        data['item%d' %(item_index)] = article
+        cache.set('engineering_news',data,timeout=600)
+        return data
 
 
         

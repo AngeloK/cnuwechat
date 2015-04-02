@@ -42,6 +42,7 @@ class Responser(object):
     def identify_data(self,d):
 
         msgType = 'text'                        #Default message type is text
+        content = ''
 
         if d['MsgType']=='event':
             if d['Event'] == 'subscribe':
@@ -53,6 +54,7 @@ class Responser(object):
                     content = spider.get_school_news()
                 elif d['EventKey'] == 'DEPARTMENT_NEWS':
                     content = spider.get_math_news()
+                    #content = spider.get_info_engineering_news()
                     msgType = 'pic_text'
                 elif d['EventKey'] == 'BALANCE_KEY':
                     openid = d['FromUserName']
@@ -67,7 +69,7 @@ class Responser(object):
                         content = push_login_link(openid,True)
                     else:
                         content = push_login_link(openid,False)
-                elif f['EventKey'] == 'SCHEDULE':
+                elif d['EventKey'] == 'SCHEDULE':
                     content = u'功能能正在完善中，敬请期待'
             else:
                 pass

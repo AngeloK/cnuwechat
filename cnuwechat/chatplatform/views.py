@@ -93,17 +93,6 @@ def login(request):
         form = LoginForm()
         return render(request,'login.html',{'form':form,'openid':openid})
 
-def search_balance(request):
-    #try:
-        #current_id = request.session['studentid']
-        #current_user = Student.objects.get(stuID = current_id)
-        #print cache.get(current_id)
-        #return render(request,'search.html',{'current_user':current_user,'department':current_user.departmentID})
-    #except:
-        #messages.info(request,u'请先绑定')
-        #return redirect('login')
-    pass
-    
 def schedule(request):
     return render(request,'today_schedule.html',{'schedules':current_schedule})
 
