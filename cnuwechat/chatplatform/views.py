@@ -105,18 +105,7 @@ def search_balance(request):
     pass
     
 def schedule(request):
-    try:
-        current_id = request.session['studentid']
-
-        print 'this is cache from schedule'
-        print cache.get(current_id)
-        week_today = datetime.date.today().strftime('%w')
-        current_schedule = Schedule.objects.filter(studentID_id = current_id).order_by('week')
-
-        return render(request,'today_schedule.html',{'schedules':current_schedule})
-    except:
-        messages.info(request,u"请先绑定")
-        return redirect('login')
+    return render(request,'today_schedule.html',{'schedules':current_schedule})
 
 def logout(request):
     pass
