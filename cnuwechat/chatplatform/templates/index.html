@@ -5,6 +5,9 @@
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
         {% load staticfiles %}
+        <script type="text/javascript" src="{% static  "chatplatform/js/jquery-1.11.2.js" %}"></script>
+        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="{% static  "chatplatform/js/chatplatform.js" %}"></script>
     </head> 
 
     <body>
@@ -19,7 +22,5 @@
             {% endif %}
             {% block content %}{% endblock %}
         </div>
-        <!--Latest compiled and minified JavaScript-->
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     </body>
 </html>
