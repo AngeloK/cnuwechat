@@ -3,6 +3,7 @@ from django.core.cache import cache
 from django.db import models
 from ..receiver import WechatMsg 
 from ..spider import ArticleSpider
+from ..connector import get_balance_str
 
 class ContentResponse(models.Model):
 
@@ -59,10 +60,11 @@ class Responser(object):
                     if balance:
                         content = balance
                     else:
-                        content = u'请先绑定'
+                        content = get_balance_str(openid)
+                        print content
                 elif d['EventKey'] == 'BIND':
                     openid = d['FromUserName']
-                    if cache.get(openid):
+                    if cache.get(openid+'_balance'):
                         content = push_login_link(openid,True)
                     else:
                         content = push_login_link(openid,False)

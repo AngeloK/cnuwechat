@@ -20,7 +20,7 @@ def get_access_token(appId,appsecret):
     as_token = response['access_token']
     result = '['+as_token+']'+'at'+now
     logger.info('current access_token will expire in 7000 from now(%s)' %now)
-    cache.set('access_token',as_token,timeout=7000)
+    cache.set('access_token',as_token,timeout=7200)
     return result
     
 

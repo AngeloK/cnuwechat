@@ -78,37 +78,16 @@ def index(request):
 def login(request):
 
     if request.method == 'POST':
-        print request.body
         username = request.POST['studentid']
         password = request.POST['password']
         openid = request.POST['openid']
         current_user = CnuConnector(username,password)
 
-        current_user.authenticate()
+        current_user.authenticate(openid)
 
         if current_user.status == 1:
             messages.success(request,u'绑定成功，请返回')
-            #celery task, get balance()
             return redirect('index')
-        #try:
-            #username = request.POST['studentid']
-            #password = request.POST['password']
-            #openid = request.POST['openid']
-            #current_user = CnuConnector(username,password)
-
-            #current_user.authenticate()
-
-            #if current_user.status == 1:
-                #messages.success(request,u'绑定成功，请返回')
-                #celery task, get balance()
-                #return redirect('index')
-                
-            #else:
-                #messages.error(request,u'用户名或密码错误,请重新输入')
-                #return redirect('login')
-        #except:
-            #messages.error(request,u'请输入用户名和密码')
-            #return redirect('login')
     else:
         openid = request.GET['openid']
         form = LoginForm()
@@ -124,7 +103,6 @@ def search_balance(request):
         #messages.info(request,u'请先绑定')
         #return redirect('login')
     pass
-
     
 def schedule(request):
     try:
