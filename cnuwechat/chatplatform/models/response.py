@@ -55,7 +55,7 @@ class Responser(object):
                     msgType = 'pic_text'
                     content = spider.get_school_news()
                 elif d['EventKey'] == 'DEPARTMENT_NEWS':
-                    content = u'请回复对应数字查看详情\n [1]数学科学院\n[2]物理系\n[3]化学系\n[4]生命科学院\n[5]信息工程学院'
+                    content = u'请回复对应数字查看详情\n[1]数学科学院\n[2]物理系\n[3]化学系\n[4]生命科学院\n[5]信息工程学院'
                 elif d['EventKey'] == 'BALANCE_KEY':
                     openid = d['FromUserName']
                     balance = cache.get(openid)
@@ -75,8 +75,9 @@ class Responser(object):
                 pass
         else:
             if d['Content'] in departmentid:
-                msgType == 'pic_text'
-                content = spider.get_info_engineering_news(d['content'])
+                spider = ArticleSpider()
+                msgType = 'pic_text'
+                content = spider.get_news_by_departmentid(d['Content'])
             else:
                 content = u'我正在锻炼自己有更好的交流功能，现在还很害羞^_^'
         return content,msgType
