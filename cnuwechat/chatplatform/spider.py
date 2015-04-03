@@ -254,14 +254,51 @@ class ArticleSpider(object):
         return data
 
     def get_physcis_news(self):
-        pass
+        
+        physics_news = cache.get('physics_news')
+        if physics_news:
+            return physics_news
+
+        index_url = 'http://wlx.cnu.edu.cn/tzgg/index.htm'
+
+        url_head = 'http://wlx.cnu.edu.cn/'
+
+        class_= 't_list_main_2'
+
+        res = urllib2.urlopen(index_url).read()
+        soup = BeautifulSoup(res)
+
+        article_block = soup.find('div',class_='t_list_main_2')
+
+        article_li = article_block.find_all('li',limit=5)
+
+        data = {}
+        description = ''
+        picurl = 'http://ico.ooopic.com/ajax/iconpng/?id=115767.png'
+        item_index = 1
+
+        for item in article_li:
+            title = item.a.string[11:]
+            url = url_head + item.a['href']
+            article = dict(title=title,url=url,description=description,picurl=picurl)
+            data['item%d' %item_index] = article
+            item_index = item_index + 1
+
+        title = u'查看更多'
+        url = index_url
+        article = dict(title=title,url=url,description=description,picurl=picurl)
+        data['item%d' %(item_index)] = article
+        cache.set('physics_news',data,timeout=600)
+
+        return data
+
 
     def get_news_by_departmentid(self,departmentid):
        
         if departmentid == '1':
             return self.get_math_news()
-        #if departmentid == '2':
-            #return self.get_physcis_news()
+        if departmentid == '2':
+            return self.get_physcis_news()
         if departmentid == '3':
             return self.get_chemistry_news()
         if departmentid == '4':
