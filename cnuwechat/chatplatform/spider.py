@@ -146,11 +146,81 @@ class ArticleSpider(object):
 
             return data
 
-    def get_chemistry_news():
-        pass
+    def get_chemistry_news(self):
 
-    def get_biology_news():
-        pass
+        chemistry_news = cache.get('chemistry_news')
+
+        if chemistry_news:
+            return chemistry_news
+        
+        index_url = 'http://202.204.208.109/hxx/index.php?q=xxgg'
+        url_head = 'http://202.204.208.109/'
+        
+        res = urllib2.urlopen(index_url).read()
+        soup = BeautifulSoup(res)
+
+        art_div = soup.find_all('div',class_='views-field-title',limit=3)
+      
+        data = {}
+        description = ''
+        picurl = 'http://ico.ooopic.com/ajax/iconpng/?id=115767.png'
+    
+        item_index = 1
+        for item in art_div:
+            title = unicode(item.a.string)
+            url = url_head+item.a['href']
+            article = dict(title=title,url=url,description=description,picurl=picurl)
+            data['item%d' %item_index] = article
+            item_index = item_index + 1 
+
+        title = u'查看更多'
+        url = index_url
+        article = dict(title=title,url=url,description=description,picurl=picurl)
+        data['item%d' %(item_index)] = article
+
+        cache.set('chemistry_news',data,timeout=600)
+
+
+        return data
+
+    def get_biology_news(self):
+
+        school_news = cache.get('school_news')
+
+        if school_news:
+            return school_news
+        else:
+            index_url = 'http://smkxxy.cnu.edu.cn/tzgg/index.htm'
+            url_head = 'http://smkxxy.cnu.edu.cn/tzgg/'
+            res = urllib2.urlopen(index_url).read()
+            soup = BeautifulSoup(res)
+
+            pg_list = soup.find_all('div',class_='r_l_list02')
+            article_li = pg_list[0].find_all('li',limit=5)
+            
+            data = {}
+            description = ''
+            picurl = 'http://ico.ooopic.com/ajax/iconpng/?id=115767.png'
+            item_index = 1
+            for item in article_li:
+                
+                title = item.a.string[12:]
+                url = url_head+item.a['href']
+                article = dict(title=title,url=url,description=description,picurl=picurl)
+                data['item%d' %item_index] = article
+                item_index = item_index + 1
+
+            # link for search more '查看更多'
+            title = u'查看更多'
+            url = index_url
+            article = dict(title=title,url=url,description=description,picurl=picurl)
+            data['item%d' %(item_index)] = article
+
+            cache.set('school_news',data,timeout=600)
+            return data
+        
+
+
 
     def get_info_engineering_news(self):
 
@@ -184,6 +254,8 @@ class ArticleSpider(object):
         return data
 
 
+    def get_news_by_departmentid(self,departmentid):
+        pass
         
      
 

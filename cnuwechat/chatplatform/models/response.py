@@ -41,6 +41,8 @@ class Responser(object):
         
     def identify_data(self,d):
 
+        departmentid = ['1','2','3','4','5','6','7']
+
         msgType = 'text'                        #Default message type is text
         content = ''
 
@@ -53,7 +55,9 @@ class Responser(object):
                     msgType = 'pic_text'
                     content = spider.get_school_news()
                 elif d['EventKey'] == 'DEPARTMENT_NEWS':
-                    content = spider.get_math_news()
+                    #content = spider.get_math_news()
+                    #content = spider.get_biology_news()
+                    content = spider.get_chemistry_news()
                     #content = spider.get_info_engineering_news()
                     msgType = 'pic_text'
                 elif d['EventKey'] == 'BALANCE_KEY':
