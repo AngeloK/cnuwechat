@@ -253,11 +253,23 @@ class ArticleSpider(object):
         cache.set('engineering_news',data,timeout=600)
         return data
 
+    def get_physcis_news(self):
+        pass
 
     def get_news_by_departmentid(self,departmentid):
-        pass
-        
-     
+       
+        if departmentid == '1':
+            return self.get_math_news()
+        #if departmentid == '2':
+            #return self.get_physcis_news()
+        if departmentid == '3':
+            return self.get_chemistry_news()
+        if departmentid == '4':
+            return self.get_biology_news()
+        if departmentid == '5':
+            return self.get_info_engineering_news()
+
+        return -1 
 
 
 

@@ -55,11 +55,7 @@ class Responser(object):
                     msgType = 'pic_text'
                     content = spider.get_school_news()
                 elif d['EventKey'] == 'DEPARTMENT_NEWS':
-                    #content = spider.get_math_news()
-                    #content = spider.get_biology_news()
-                    content = spider.get_chemistry_news()
-                    #content = spider.get_info_engineering_news()
-                    msgType = 'pic_text'
+                    content = u'请回复对应数字查看详情\n [1]数学科学院\n[2]物理系\n[3]化学系\n[4]生命科学院\n[5]信息工程学院'
                 elif d['EventKey'] == 'BALANCE_KEY':
                     openid = d['FromUserName']
                     balance = cache.get(openid)
@@ -78,7 +74,11 @@ class Responser(object):
             else:
                 pass
         else:
-            content = u'我正在锻炼自己有更好的交流功能，现在还很害羞^_^'
+            if d['Content'] in departmentid:
+                msgType == 'pic_text'
+                content = spider.get_info_engineering_news(d['content'])
+            else:
+                content = u'我正在锻炼自己有更好的交流功能，现在还很害羞^_^'
         return content,msgType
 
 def push_login_link(openid,is_user_stored):
