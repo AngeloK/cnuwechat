@@ -41,7 +41,7 @@ APPSECRET = 'b48651746de29bef815810a53e782384'
 CELERYBEAT_SCHEDULE = {
     'get_access_token':{
         'task':'chatplatform.tasks.get_access_token',
-        'schedule':crontab(hour='*/2'),
+        'schedule':crontab(minute=0,hour='*/2'),
         'args':(APPID,APPSECRET),
     },
 } 
@@ -116,3 +116,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR,'static_root')
